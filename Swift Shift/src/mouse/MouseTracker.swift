@@ -118,7 +118,6 @@ class MouseTracker {
         }
     }
 
-
     private func startTrackingTimer() {
         trackingTimer?.invalidate()
         trackingTimer = Timer.scheduledTimer(withTimeInterval: trackingTimeout, repeats: false) { [weak self] _ in
@@ -200,9 +199,13 @@ class MouseTracker {
                 newWidth -= deltaX
                 newOrigin.x += deltaX
             case .center:
-                // Treat as bottomRight
-                newWidth += deltaX
-                newHeight -= deltaY
+                if abs(deltaX) > abs(deltaY) {
+                    newWidth += 2 * deltaX
+                    newOrigin.x -= deltaX
+                } else {
+                    newHeight += 2 * deltaY
+                    newOrigin.y -= deltaY
+                }
             case .right:
                 newWidth += deltaX
             case .bottomLeft:
